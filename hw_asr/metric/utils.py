@@ -15,8 +15,6 @@ def calc_cer(target_text, predicted_text) -> float:
     # Рассчитайте CER
     cer_score = distance / len(target_text)
 
-    
-
     return cer_score
     
 
