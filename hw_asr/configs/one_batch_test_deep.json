@@ -1,5 +1,5 @@
 {
-  "name": "one_batch_test_deep_kaggle",
+  "name": "one_batch_test_deep",
   "n_gpu": 1,
   "preprocessing": {
     "sr": 16000,
@@ -30,7 +30,6 @@
           "type": "LibrispeechDataset",
           "args": {
             "part": "train-clean-100",
-            "data_dir": "/kaggle/input/train-clean-100-dataset",
             "max_audio_length": 20.0,
             "max_text_length": 200,
             "limit": 10
@@ -46,7 +45,6 @@
           "type": "LibrispeechDataset",
           "args": {
             "part": "train-clean-100",
-            "data_dir": "/kaggle/input/train-clean-100-dataset",
             "max_audio_length": 20.0,
             "max_text_length": 200,
             "limit": 10
