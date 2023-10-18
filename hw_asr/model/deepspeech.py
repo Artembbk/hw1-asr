@@ -17,6 +17,7 @@ class DeepSpeech2pacModel(BaseModel):
             'rnn': nn.RNN,
         }
 
+        self.rnn_bidirectional = rnn_bidirectional
         self.kernel_sizes = kernel_sizes
         self.conv_num = conv_num
         self.strides = strides
@@ -46,8 +47,10 @@ class DeepSpeech2pacModel(BaseModel):
 
         rnn = rnns[rnn_type]
         self.rnn = rnn(self.out_conv_dim * self.channels[-1], self.hidden, num_layers=rnn_layers, bidirectional=rnn_bidirectional, batch_first=True)
-
-        self.fc = nn.Linear(in_features=hidden, out_features=n_class)
+        if rnn_bidirectional:
+            self.fc = nn.Linear(in_features=2*hidden, out_features=n_class)
+        else:
+            self.fc = nn.Linear(in_features=hidden, out_features=n_class)
 
 
 
@@ -70,7 +73,10 @@ class DeepSpeech2pacModel(BaseModel):
         output, _ = self.rnn(output)
         batch_size, seq_l, dim = output.size()
         assert batch_size == len(batch['audio_path'])
-        assert dim == self.hidden
+        if self.rnn_bidirectional:
+            assert dim == 2*self.hidden
+        else:
+            assert dim == self.hidden
         output = self.fc(output)
         batch_size, seq_l, dim = output.size()
         assert batch_size == len(batch['audio_path'])
@@ -82,5 +88,4 @@ class DeepSpeech2pacModel(BaseModel):
         output_lengths = input_lengths
         for i in range(self.conv_num):
             output_lengths = ((output_lengths - self.kernel_sizes[i][1]) // self.strides[i][1]) + 1
-
         return output_lengths
