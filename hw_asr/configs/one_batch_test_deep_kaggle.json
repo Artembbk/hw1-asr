@@ -38,8 +38,8 @@
         {
           "type": "LibrispeechDataset",
           "args": {
-            "part": "train-clean-100",
-            "data_dir": "/kaggle/input/train-clean-100-dataset",
+            "part": "dev-clean",
+            "data_dir": "/kaggle/input/dev-clean-dataset",
             "max_audio_length": 20.0,
             "max_text_length": 200,
             "limit": 10
@@ -54,8 +54,8 @@
         {
           "type": "LibrispeechDataset",
           "args": {
-            "part": "train-clean-100",
-            "data_dir": "/kaggle/input/train-clean-100-dataset",
+            "part": "dev-clean",
+            "data_dir": "/kaggle/input/dev-clean-dataset",
             "max_audio_length": 20.0,
             "max_text_length": 200,
             "limit": 10
