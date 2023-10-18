@@ -27,7 +27,7 @@
       "rnn_type": "gru",
       "rnn_layers": 3,
       "rnn_bidirectional": false,
-      "batch_norm_conv": false
+      "batch_norm_conv": true
     }
   },
   "data": {

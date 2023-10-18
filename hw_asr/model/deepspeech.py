@@ -17,7 +17,6 @@ class DeepSpeech2pacModel(BaseModel):
             'rnn': nn.RNN,
         }
 
-        # Размеры ядер сверток и шаги
         self.kernel_sizes = kernel_sizes
         self.conv_num = conv_num
         self.strides = strides
@@ -35,7 +34,7 @@ class DeepSpeech2pacModel(BaseModel):
         for i in range(conv_num):
             if conv_type == '2d':
                 self.conv_layers.append(nn.Conv2d(self.channels[i], self.channels[i+1], self.kernel_sizes[i], stride=self.strides[i]))
-            elif conv_type == '1d':
+            else:
                 raise NotImplementedError
             
             if batch_norm_conv:
