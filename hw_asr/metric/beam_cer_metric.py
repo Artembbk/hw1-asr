@@ -20,7 +20,7 @@ class BeamCERMetric(BaseMetric):
         start_time = time.time()
         for log_probs_1, log_probs_length_1, target_text in zip(log_probs.cpu(), lengths, text):
             target_text = BaseTextEncoder.normalize_text(target_text)
-            pred_text = self.text_encoder.ctc_beam_search(log_probs_1, log_probs_length_1)[0].text
+            pred_text = self.text_encoder.ctc_beam_search(torch.exp(log_probs_1), log_probs_length_1)[0].text
             cers.append(calc_cer(target_text, pred_text))
         end_time = time.time()
         print("cer_time", end_time - start_time)

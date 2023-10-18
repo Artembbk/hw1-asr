@@ -72,20 +72,48 @@
     "type": "CTCLoss",
     "args": {}
   },
-  "metrics": [
-    {
-      "type": "ArgmaxWERMetric",
-      "args": {
-        "name": "WER (argmax)"
+  "metrics": {
+    "train": [
+      {
+        "type": "ArgmaxWERMetric",
+        "args": {
+          "name": "WER (argmax)"
+        }
+      },
+      {
+        "type": "ArgmaxCERMetric",
+        "args": {
+          "name": "CER (argmax)"
+        }
       }
-    },
-    {
-      "type": "ArgmaxCERMetric",
-      "args": {
-        "name": "CER (argmax)"
+    ],
+    "val": [
+      {
+        "type": "ArgmaxWERMetric",
+        "args": {
+          "name": "WER (argmax)"
+        }
+      },
+      {
+        "type": "ArgmaxCERMetric",
+        "args": {
+          "name": "CER (argmax)"
+        }
+      },
+      {
+        "type": "BeamWERMetric",
+        "args": {
+          "name": "WER (beam)"
+        }
+      },
+      {
+        "type": "BeamCERMetric",
+        "args": {
+          "name": "CER (beam)"
+        }
       }
-    }
-  ],
+    ]
+  },
   "lr_scheduler": {
     "type": "OneCycleLR",
     "args": {
