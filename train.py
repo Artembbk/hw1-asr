@@ -44,10 +44,21 @@ def main(config):
 
     # get function handles of loss and metrics
     loss_module = config.init_obj(config["loss"], module_loss).to(device)
-    metrics = [
+    metrics = {
+        "train": [],
+        "val": []
+    }
+    metrics["train"] = [
         config.init_obj(metric_dict, module_metric, text_encoder=text_encoder)
-        for metric_dict in config["metrics"]
+        for metric_dict in config["metrics"]["train"]
     ]
+
+    metrics["val"] = [
+        config.init_obj(metric_dict, module_metric, text_encoder=text_encoder)
+        for metric_dict in config["metrics"]["val"]
+    ]
+
+
 
     # build optimizer, learning rate scheduler. delete every line containing lr_scheduler for
     # disabling scheduler

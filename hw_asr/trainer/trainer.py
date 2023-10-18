@@ -53,10 +53,11 @@ class Trainer(BaseTrainer):
         self.log_step = 50
 
         self.train_metrics = MetricTracker(
-            "loss", "grad norm", *[m.name for m in self.metrics], writer=self.writer
+            "loss", "grad norm", *[m.name for m in self.metrics["train"]], writer=self.writer
         )
+
         self.evaluation_metrics = MetricTracker(
-            "loss", *[m.name for m in self.metrics], writer=self.writer
+            "loss", *[m.name for m in self.metrics["val"]], writer=self.writer
         )
 
     @staticmethod
@@ -154,7 +155,7 @@ class Trainer(BaseTrainer):
                 self.lr_scheduler.step()
 
         metrics.update("loss", batch["loss"].item())
-        for met in self.metrics:
+        for met in self.metrics["train" if is_train else "val"]:
             metrics.update(met.name, met(**batch))
         return batch
 
@@ -208,7 +209,6 @@ class Trainer(BaseTrainer):
             *args,
             **kwargs,
     ):
-        # TODO: implement logging of beam search results
         if self.writer is None:
             return
         argmax_inds = log_probs.cpu().argmax(-1).numpy()
@@ -231,7 +231,7 @@ class Trainer(BaseTrainer):
                 "raw prediction": raw_pred,
                 "predictions": pred,
                 "wer": wer,
-                "cer": cer,
+                "cer": cer
             }
         self.writer.add_table("predictions", pd.DataFrame.from_dict(rows, orient="index"))
 
