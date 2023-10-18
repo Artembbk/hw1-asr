@@ -18,7 +18,16 @@
     "type": "DeepSpeech2pacModel",
     "args": {
       "n_feats": 128,
-      "fc_hidden": 512
+      "hidden": 512,
+      "conv_num": 1,
+      "conv_type": "2d",
+      "kernel_sizes": [[41, 11]],
+      "strides": [[2, 2]],
+      "channels": [32],
+      "rnn_type": "gru",
+      "rnn_layers": 3,
+      "rnn_bidirectional": false,
+      "batch_norm_conv": false
     }
   },
   "data": {
