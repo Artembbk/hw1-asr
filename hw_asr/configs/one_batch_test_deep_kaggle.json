@@ -25,7 +25,7 @@
       "strides": [[2, 2]],
       "channels": [32],
       "rnn_type": "gru",
-      "rnn_layers": 3,
+      "rnn_layers": 5,
       "rnn_bidirectional": true,
       "batch_norm_conv": true
     }
