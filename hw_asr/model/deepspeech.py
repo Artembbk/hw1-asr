@@ -38,7 +38,7 @@ class DeepSpeech2pacModel(BaseModel):
                 raise NotImplementedError
             
             if batch_norm_conv:
-                self.conv_layers.append(nn.BatchNorm2d(self.channels[i]))
+                self.conv_layers.append(nn.BatchNorm2d(self.channels[i+1]))
 
             self.conv_layers.append(nn.ReLU())
 
