@@ -81,7 +81,7 @@ class DeepSpeech2pacModel(BaseModel):
         batch_size, seq_l, dim = output.size()
         assert batch_size == len(batch['audio_path'])
         assert dim == self.n_class
-        return output
+        return {"logits": output}
 
 
     def transform_input_lengths(self, input_lengths):
