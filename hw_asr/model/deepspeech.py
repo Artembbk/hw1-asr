@@ -88,7 +88,7 @@ class DeepSpeech2pacModel(BaseModel):
             'lstm': nn.LSTM,
             'gru': nn.GRU,
             'rnn': nn.RNN,
-            'bn_gru': CustomGRU
+            'bn_gru': CustomGRULayer
         }
 
         self.rnn_bidirectional = rnn_bidirectional
