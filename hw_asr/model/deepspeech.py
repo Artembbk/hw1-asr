@@ -1,8 +1,81 @@
 from torch import nn
 from torch.nn import Sequential
 from torch.nn.utils.rnn import pack_padded_sequence
+import torch
 
 from hw_asr.base import BaseModel
+
+class CustomGRU(nn.Module):
+    def __init__(self, input_size, hidden_size):
+        super(CustomGRU, self).__init()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        
+        # Веса для обновления состояния (Update Gate)
+        self.W_z = nn.Linear(hidden_size, hidden_size)
+        self.U_z = nn.Linear(input_size, hidden_size)
+        
+        # Веса для создания нового состояния (New State)
+        self.W_r = nn.Linear(hidden_size, hidden_size)
+        self.U_r = nn.Linear(input_size, hidden_size)
+        self.W_h = nn.Linear(hidden_size, hidden_size)
+        self.U_h = nn.Linear(input_size, hidden_size)
+        self.bn = nn.BatchNorm1d(hidden_size)
+
+    def forward(self, x, h):
+        # Расчет вектора обновления (Update Gate)
+        z = torch.sigmoid(self.W_z(h) + self.bn(self.U_z(x)))
+        
+        # Расчет вектора сброса (Reset Gate)
+        r = torch.sigmoid(self.W_r(h) + self.bn(self.U_r(x)))
+        
+        # Расчет нового состояния (New State)
+        new_state = torch.tanh(self.W_h(r * h) + self.bn(self.U_h(x)))
+        
+        # Обновление текущего состояния (Hidden State Update)
+        h_new = (1 - z) * h + z * new_state
+        
+        return h_new
+    
+import torch
+import torch.nn as nn
+
+class CustomGRULayer(nn.Module):
+    def __init__(self, input_size, hidden_size, num_layers=1, bidirectional=False):
+        super(CustomGRULayer, self).__init()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+        self.bidirectional = bidirectional
+        self.directions = 2 if bidirectional else 1  # 2 for bidirectional, 1 for unidirectional
+        self.gru_cells = nn.ModuleList([CustomGRU(input_size, hidden_size) for _ in range(self.directions * num_layers)])
+
+    def forward(self, x, h):
+        # If bidirectional, we need to account for the forward and backward directions.
+        if self.bidirectional:
+            self.directions = 2
+
+        # Get the number of time steps and batch size
+        seq_len, batch_size, _ = x.size()
+
+        # List to store outputs
+        output = []
+
+        for layer in range(self.num_layers):
+            layer_outputs = []
+            for direction in range(self.directions):
+                h_direction = h[direction + layer * self.directions]
+
+                for t in range(seq_len):
+                    h_direction = self.gru_cells[direction + layer * self.directions](x[t], h_direction)
+                    layer_outputs.append(h_direction)
+
+            # Update the hidden state for the next layer
+            h = torch.stack(layer_outputs).view(self.directions * self.num_layers, seq_len, batch_size, self.hidden_size)
+
+        # Return outputs and the final hidden state
+        output = torch.stack(layer_outputs).view(seq_len, batch_size, self.directions, self.hidden_size)
+        return output, h
 
 
 class DeepSpeech2pacModel(BaseModel):
@@ -15,6 +88,7 @@ class DeepSpeech2pacModel(BaseModel):
             'lstm': nn.LSTM,
             'gru': nn.GRU,
             'rnn': nn.RNN,
+            'bn_gru': CustomGRU
         }
 
         self.rnn_bidirectional = rnn_bidirectional
