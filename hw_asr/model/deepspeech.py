@@ -7,7 +7,7 @@ from hw_asr.base import BaseModel
 
 class CustomGRU(nn.Module):
     def __init__(self, input_size, hidden_size):
-        super(CustomGRU, self).__init()
+        super(CustomGRU, self).__init__()
         self.input_size = input_size
         self.hidden_size = hidden_size
         
@@ -50,7 +50,9 @@ class CustomGRULayer(nn.Module):
         self.directions = 2 if bidirectional else 1  # 2 for bidirectional, 1 for unidirectional
         self.gru_cells = nn.ModuleList([CustomGRU(input_size, hidden_size) for _ in range(self.directions * num_layers)])
 
-    def forward(self, x, h):
+    def forward(self, x, h=None):
+        if h is None:
+            h = torch.zeros(self.directions * self.num_layers, batch_size, self.hidden_size)
         # If bidirectional, we need to account for the forward and backward directions.
         if self.bidirectional:
             self.directions = 2
