@@ -41,7 +41,7 @@ import torch
 import torch.nn as nn
 
 class CustomGRULayer(nn.Module):
-    def __init__(self, input_size, hidden_size, num_layers=1, bidirectional=False):
+    def __init__(self, input_size, hidden_size, num_layers=1, bidirectional=False, batch_first=True):
         super(CustomGRULayer, self).__init()
         self.input_size = input_size
         self.hidden_size = hidden_size
