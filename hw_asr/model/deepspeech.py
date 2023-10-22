@@ -107,7 +107,6 @@ class DeepSpeech2pacModel(BaseModel):
 
     def forward(self, spectrogram, **batch):
         lengths = batch['spectrogram_length']
-        print(lengths)
         output_lengths = self.transform_input_lengths(lengths)
         assert len(spectrogram.size()) == 3
         batch_size, dim, time = spectrogram.size()
