@@ -24,7 +24,7 @@
       "kernel_sizes": [[41, 11]],
       "strides": [[2, 2]],
       "channels": [32],
-      "rnn_type": "bn_gru",
+      "rnn_type": "gru",
       "rnn_layers": 5,
       "rnn_bidirectional": true,
       "batch_norm_conv": true
