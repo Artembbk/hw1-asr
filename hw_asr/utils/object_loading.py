@@ -42,18 +42,22 @@ def get_dataloaders(configs: ConfigParser, text_encoder: BaseTextEncoder):
             bs = params["batch_size"]
             shuffle = True
             batch_sampler = None
+            assert bs <= len(dataset), \
+                f"Batch size ({bs}) shouldn't be larger than dataset length ({len(dataset)})"
+
         elif "batch_sampler" in params:
             batch_sampler = configs.init_obj(params["batch_sampler"], batch_sampler_module,
                                              data_source=dataset)
-            bs, shuffle = 1, False
+            bs, shuffle, drop_last = 1, False, False
+            assert batch_sampler.batch_size <= len(dataset), \
+                f"Batch size ({bs}) shouldn't be larger than dataset length ({len(dataset)})"
         else:
             raise Exception()
 
         # Fun fact. An hour of debugging was wasted to write this line
-        assert bs <= len(dataset), \
-            f"Batch size ({bs}) shouldn't be larger than dataset length ({len(dataset)})"
 
         # create dataloader
+        print(bs, shuffle, drop_last)
         dataloader = DataLoader(
             dataset, batch_size=bs, collate_fn=collate_fn,
             shuffle=shuffle, num_workers=num_workers,

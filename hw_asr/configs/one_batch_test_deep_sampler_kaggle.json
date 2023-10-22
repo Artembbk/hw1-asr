@@ -1,5 +1,5 @@
 {
-  "name": "one_batch_test",
+  "name": "one_batch_test_deep_kaggle",
   "n_gpu": 1,
   "preprocessing": {
     "sr": 16000,
@@ -15,21 +15,35 @@
     "spectrogram": []
   },
   "arch": {
-    "type": "BaselineModel",
+    "type": "DeepSpeech2pacModel",
     "args": {
       "n_feats": 128,
-      "fc_hidden": 512
+      "hidden": 512,
+      "conv_num": 1,
+      "conv_type": "2d",
+      "kernel_sizes": [[41, 11]],
+      "strides": [[2, 2]],
+      "channels": [32],
+      "rnn_type": "gru",
+      "rnn_layers": 5,
+      "rnn_bidirectional": true,
+      "batch_norm_conv": true
     }
   },
   "data": {
     "train": {
-      "batch_size": 10,
+      "batch_sampler": {
+        "type": "GroupLengthBatchSampler",
+        "args": {
+          "batch_size": 10
+      },
       "num_workers": 0,
       "datasets": [
         {
           "type": "LibrispeechDataset",
           "args": {
             "part": "dev-clean",
+            "data_dir": "/kaggle/input/dev-clean-dataset",
             "max_audio_length": 20.0,
             "max_text_length": 200,
             "limit": 10
@@ -45,6 +59,7 @@
           "type": "LibrispeechDataset",
           "args": {
             "part": "dev-clean",
+            "data_dir": "/kaggle/input/dev-clean-dataset",
             "max_audio_length": 20.0,
             "max_text_length": 200,
             "limit": 10

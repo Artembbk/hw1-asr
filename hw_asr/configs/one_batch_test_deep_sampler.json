@@ -1,5 +1,5 @@
 {
-  "name": "one_batch_test_deep_kaggle",
+  "name": "one_batch_test_deep",
   "n_gpu": 1,
   "preprocessing": {
     "sr": 16000,
@@ -25,21 +25,25 @@
       "strides": [[2, 2]],
       "channels": [32],
       "rnn_type": "gru",
-      "rnn_layers": 5,
-      "rnn_bidirectional": true,
-      "batch_norm_conv": true
+      "rnn_layers": 3,
+      "rnn_bidirectional": false,
+      "batch_norm_conv": false
     }
   },
   "data": {
     "train": {
-      "batch_size": 10,
+      "batch_sampler": {
+        "type": "GroupLengthBatchSampler",
+        "args": {
+          "batch_size": 10
+        }
+      },
       "num_workers": 0,
       "datasets": [
         {
           "type": "LibrispeechDataset",
           "args": {
-            "part": "dev-clean",
-            "data_dir": "/kaggle/input/dev-clean-dataset",
+            "part": "train-clean-100",
             "max_audio_length": 20.0,
             "max_text_length": 200,
             "limit": 10
@@ -54,8 +58,7 @@
         {
           "type": "LibrispeechDataset",
           "args": {
-            "part": "dev-clean",
-            "data_dir": "/kaggle/input/dev-clean-dataset",
+            "part": "train-clean-100",
             "max_audio_length": 20.0,
             "max_text_length": 200,
             "limit": 10
