@@ -36,6 +36,7 @@
         "type": "GroupLengthBatchSampler",
         "args": {
           "batch_size": 10
+        }
       },
       "num_workers": 0,
       "datasets": [
