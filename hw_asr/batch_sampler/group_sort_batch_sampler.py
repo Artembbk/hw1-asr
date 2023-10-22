@@ -16,8 +16,7 @@ class GroupLengthBatchSampler(Sampler):
             self.first_epoch = False
             return iter(self.indices[i:i + self.batch_size] for i in range(0, len(self.indices), self.batch_size))
         else:
-            if self.random_order_after_first_epoch:
-                random.shuffle(self.indices)
+            random.shuffle(self.indices)
             return iter(self.indices[i:i + self.batch_size] for i in range(0, len(self.indices), self.batch_size))
 
     def __len__(self):
