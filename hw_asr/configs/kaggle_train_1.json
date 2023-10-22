@@ -104,18 +104,6 @@
         "args": {
           "name": "CER (argmax)"
         }
-      },
-      {
-        "type": "BeamWERMetric",
-        "args": {
-          "name": "WER (beam)"
-        }
-      },
-      {
-        "type": "BeamCERMetric",
-        "args": {
-          "name": "CER (beam)"
-        }
       }
     ]
   },
