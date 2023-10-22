@@ -23,7 +23,7 @@ class BatchRNN(nn.Module):
             x = x.transpose(1, 2)
             x = self.batch_norm(x)
             x = x.transpose(1, 2)
-        x = pack_padded_sequence(x, output_lengths, batch_first=True, enforce_sorted=False)
+        x = pack_padded_sequence(x, output_lengths, batch_first=True)
         x, h = self.rnn(x, h)
         x, output_lengths = pad_packed_sequence(x, batch_first=True)
         if self.bidirectional:
@@ -107,6 +107,7 @@ class DeepSpeech2pacModel(BaseModel):
 
     def forward(self, spectrogram, **batch):
         lengths = batch['spectrogram_length']
+        print(lengths)
         output_lengths = self.transform_input_lengths(lengths)
         assert len(spectrogram.size()) == 3
         batch_size, dim, time = spectrogram.size()

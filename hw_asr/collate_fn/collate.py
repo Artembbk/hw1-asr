@@ -19,6 +19,8 @@ def collate_fn(dataset_items: List[dict]):
         'audio_path': []
     }
 
+    dataset_items = sorted(dataset_items, key=lambda x: -x['spectrogram'].shape[2])
+
     for item in dataset_items: 
         result_batch['spectrogram'].append(item['spectrogram'].squeeze(0).T)
         result_batch['text_encoded'].append(item['text_encoded'].view(-1,))
