@@ -62,7 +62,7 @@ class BatchRNNLayer(nn.Module):
 
 class DeepSpeech2pacModel(BaseModel):
     def __init__(self, n_feats, n_class, hidden, conv_num, conv_type, 
-                 kernel_sizes, strides, channels, rnn_type, 
+                 kernel_sizes, strides, channels, paddings, rnn_type, 
                  rnn_layers, rnn_bidirectional, batch_norm_conv, **batch):
         super().__init__(n_feats, n_class, **batch)
 
@@ -76,6 +76,7 @@ class DeepSpeech2pacModel(BaseModel):
         self.kernel_sizes = kernel_sizes
         self.conv_num = conv_num
         self.strides = strides
+        self.paddings = paddings
         self.channels = [1] + channels
         self.hidden = hidden
         self.n_class = n_class
@@ -83,13 +84,13 @@ class DeepSpeech2pacModel(BaseModel):
 
         self.out_conv_dim = n_feats
         for i in range(conv_num):
-            self.out_conv_dim = ((self.out_conv_dim - self.kernel_sizes[i][0]) // self.strides[i][0]) + 1
+            self.out_conv_dim = ((self.out_conv_dim + 2*self.paddings[i][0] - self.kernel_sizes[i][0]) // self.strides[i][0]) + 1
 
         self.conv_layers = []
 
         for i in range(conv_num):
             if conv_type == '2d':
-                self.conv_layers.append(nn.Conv2d(self.channels[i], self.channels[i+1], self.kernel_sizes[i], stride=self.strides[i]))
+                self.conv_layers.append(nn.Conv2d(self.channels[i], self.channels[i+1], self.kernel_sizes[i], stride=self.strides[i], padding=self.paddings[i]))
             else:
                 raise NotImplementedError
             
@@ -137,5 +138,5 @@ class DeepSpeech2pacModel(BaseModel):
     def transform_input_lengths(self, input_lengths):
         output_lengths = input_lengths
         for i in range(self.conv_num):
-            output_lengths = ((output_lengths - self.kernel_sizes[i][1]) // self.strides[i][1]) + 1
+            output_lengths = ((output_lengths + 2*self.paddings[i][1] - self.kernel_sizes[i][1]) // self.strides[i][1]) + 1
         return output_lengths

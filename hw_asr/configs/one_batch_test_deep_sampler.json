@@ -19,15 +19,16 @@
     "args": {
       "n_feats": 128,
       "hidden": 512,
-      "conv_num": 1,
+      "conv_num": 3,
       "conv_type": "2d",
-      "kernel_sizes": [[41, 11]],
-      "strides": [[2, 2]],
-      "channels": [32],
+      "kernel_sizes": [[41, 11], [21, 11], [21, 11]],
+      "strides": [[2, 2], [2, 1], [2, 1]],
+      "channels": [32, 32, 96],
+      "paddings": [[10, 5], [10, 5], [10, 5]],
       "rnn_type": "gru",
       "rnn_layers": 3,
-      "rnn_bidirectional": false,
-      "batch_norm_conv": false
+      "rnn_bidirectional": true,
+      "batch_norm_conv": true
     }
   },
   "data": {

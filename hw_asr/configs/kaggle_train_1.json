@@ -19,11 +19,12 @@
     "args": {
       "n_feats": 128,
       "hidden": 512,
-      "conv_num": 2,
+      "conv_num": 3,
       "conv_type": "2d",
-      "kernel_sizes": [[41, 11], [21, 11]],
-      "strides": [[2, 2], [2, 1]],
-      "channels": [32, 32],
+      "kernel_sizes": [[41, 11], [21, 11], [21, 11]],
+      "strides": [[2, 2], [2, 1], [2, 1]],
+      "channels": [32, 32, 96],
+      "paddings": [[10, 5], [10, 5], [10, 5]],
       "rnn_type": "gru",
       "rnn_layers": 7,
       "rnn_bidirectional": true,
@@ -68,9 +69,9 @@
     }
   },
   "optimizer": {
-    "type": "SGD",
+    "type": "Adam",
     "args": {
-      "lr": 1e-2
+      "lr": 3e-4
     }
   },
   "loss": {
@@ -110,10 +111,10 @@
   "lr_scheduler": {
     "type": "OneCycleLR",
     "args": {
-      "steps_per_epoch": 100,
+      "steps_per_epoch": 1400,
       "epochs": 50,
       "anneal_strategy": "cos",
-      "max_lr": 1e-2,
+      "max_lr": 3e-4,
       "pct_start": 0.2
     }
   },
@@ -123,10 +124,9 @@
     "save_period": 5,
     "verbosity": 2,
     "monitor": "min val_loss",
-    "early_stop": 100,
     "visualize": "wandb",
     "wandb_project": "asr_project",
-    "len_epoch": 100,
+    "len_epoch": 1400,
     "grad_norm_clip": 10
   }
 }
