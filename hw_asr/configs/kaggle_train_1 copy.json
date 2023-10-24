@@ -1,5 +1,5 @@
 {
-  "name": "one_batch_test_deep_kaggle",
+  "name": "testing saving",
   "n_gpu": 1,
   "preprocessing": {
     "sr": 16000,
