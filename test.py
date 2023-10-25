@@ -75,7 +75,7 @@ def main(config, out_file):
                             batch["probs"][i], batch["log_probs_length"][i], beam_size=4
                         )[0],
                     }
-                )``
+                )
                 metrics["argmax cer"].append(calc_cer(results[-1]["ground_trurh"], results[-1]["pred_text_argmax"]))
                 metrics["argmax wer"].append(calc_wer(results[-1]["ground_trurh"], results[-1]["pred_text_argmax"]))
                 metrics["beam cer"].append(calc_cer(results[-1]["ground_trurh"], results[-1]["pred_text_beam_search"]))
