@@ -39,7 +39,7 @@
           "batch_size": 20
         }
       },
-      "num_workers": 0,
+      "num_workers": 8,
       "datasets": [
         {
           "type": "LibrispeechDataset",
@@ -55,7 +55,7 @@
     },
     "val": {
       "batch_size": 20,
-      "num_workers": 0,
+      "num_workers": 8,
       "datasets": [
         {
           "type": "LibrispeechDataset",
