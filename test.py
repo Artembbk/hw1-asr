@@ -11,6 +11,8 @@ from hw_asr.trainer import Trainer
 from hw_asr.utils import ROOT_PATH
 from hw_asr.utils.object_loading import get_dataloaders
 from hw_asr.utils.parse_config import ConfigParser
+from hw_asr.metric.utils import calc_cer
+from hw_asr.metric.utils import calc_wer
 
 DEFAULT_CHECKPOINT_PATH = ROOT_PATH / "default_test_model" / "checkpoint.pth"
 
@@ -43,6 +45,10 @@ def main(config, out_file):
     model.eval()
 
     results = []
+    metrics = {"argmax cer": [],
+               "argmax wer": [],
+               "beam cer": [],
+               "beam wer": []}
 
     with torch.no_grad():
         for batch_num, batch in enumerate(tqdm(dataloaders["test"])):
@@ -67,11 +73,26 @@ def main(config, out_file):
                         "pred_text_argmax": text_encoder.ctc_decode(argmax.cpu().numpy()),
                         "pred_text_beam_search": text_encoder.ctc_beam_search(
                             batch["probs"][i], batch["log_probs_length"][i], beam_size=4
-                        )[:10],
+                        )[0],
                     }
-                )
+                )``
+                metrics["argmax cer"].append(calc_cer(results[-1]["ground_trurh"], results[-1]["pred_text_argmax"]))
+                metrics["argmax wer"].append(calc_wer(results[-1]["ground_trurh"], results[-1]["pred_text_argmax"]))
+                metrics["beam cer"].append(calc_cer(results[-1]["ground_trurh"], results[-1]["pred_text_beam_search"]))
+                metrics["beam wer"].append(calc_wer(results[-1]["ground_trurh"], results[-1]["pred_text_beam_search"]))
+
+    for metric_name, metric_values in metrics.items():
+        sum = 0
+        for value in metric_values:
+            sum += value
+        metrics[metric_name] = sum / len(metric_values)
+
     with Path(out_file).open("w") as f:
-        json.dump(results, f, indent=2)
+        json.dump(metrics, f, indent=2)
+
+
+
+
 
 
 if __name__ == "__main__":
