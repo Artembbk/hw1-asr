@@ -7,9 +7,9 @@ import torch
 from hw_asr.base import BaseModel
 
 
-class BatchRNN(nn.Module):
+class RNNwithBN(nn.Module):
     def __init__(self, input_size, hidden_size, rnn_type=nn.LSTM, bidirectional=False, batch_norm=True, batch_first=True):
-        super(BatchRNN, self).__init__()
+        super(RNNwithBN, self).__init__()
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.bidirectional = bidirectional
@@ -34,7 +34,7 @@ class BatchRNNLayer(nn.Module):
     def __init__(self, input_size, hidden_size, rnn_type=nn.RNN, bidirectional=False, num_layers = 1, batch_first=True):
         super(BatchRNNLayer, self).__init__()
         self.rnn = nn.Sequential(
-            BatchRNN(
+            RNNwithBN(
                 input_size=input_size,
                 hidden_size=hidden_size,
                 rnn_type=rnn_type,
@@ -43,7 +43,7 @@ class BatchRNNLayer(nn.Module):
                 batch_first=batch_first
             ),
             *(
-                BatchRNN(
+                RNNwithBN(
                     input_size=hidden_size,
                     hidden_size=hidden_size,
                     rnn_type=rnn_type,
